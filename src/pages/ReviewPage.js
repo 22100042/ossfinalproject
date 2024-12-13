@@ -1,41 +1,56 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from 'react';
+import { Container, ListGroup, Alert } from 'react-bootstrap';
 
-function ReviewPage() {
-  const navigate = useNavigate();
+const ReviewPage = () => {
+  const [reviews, setReviews] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [status, setStatus] = useState('');
 
-  const reviews = [
-    { id: 1, author: "John Doe", content: "Great service and friendly staff!", date: "2024-12-01" },
-    { id: 2, author: "Jane Smith", content: "Clean facilities and efficient processes.", date: "2024-11-28" },
-    { id: 3, author: "Alex Johnson", content: "Highly recommend this hospital!", date: "2024-11-20" },
-  ];
+  const mockApiUrl = 'https://675bf7eb9ce247eb19380b43.mockapi.io/Hospital';
 
-  const handleWriteReview = () => {
-    navigate('/write-review');
-  };
+  useEffect(() => {
+    const fetchReviews = async () => {
+      try {
+        setStatus('Fetching reviews...');
+        const response = await fetch(mockApiUrl);
+        if (!response.ok) throw new Error('Failed to fetch reviews.');
+        const data = await response.json();
+        const allReviews = data
+          .flatMap(hospital => hospital.reviews.map(review => ({ ...review, hospitalName: hospital.name })));
+        setReviews(allReviews);
+        setStatus('');
+      } catch (error) {
+        console.error(error);
+        setStatus('Error fetching reviews.');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchReviews();
+  }, []);
+
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4 text-center">Hospital Reviews</h1>
-
-      <div className="list-group">
-        {reviews.map((review) => (
-          <div key={review.id} className="list-group-item">
-            <h5 className="mb-1">{review.author}</h5>
-            <p className="mb-1">{review.content}</p>
-            <small>{review.date}</small>
-          </div>
-        ))}
-      </div>
-
-      <div className="text-center mt-4">
-        <button className="btn btn-primary btn-lg" onClick={handleWriteReview}>
-          Write a Review
-        </button>
-      </div>
-    </div>
+    <Container>
+      <h1 className="mb-4">All Reviews</h1>
+      {status && <Alert variant={status.includes('Error') ? 'danger' : 'info'}>{status}</Alert>}
+      <ListGroup>
+        {reviews.length > 0 ? (
+          reviews.map((review, index) => (
+            <ListGroup.Item key={index}>
+              <h5>{review.hospitalName}</h5>
+              <p><strong>Rating:</strong> {review.rating}</p>
+              <p>{review.content}</p>
+            </ListGroup.Item>
+          ))
+        ) : (
+          <p>No reviews available.</p>
+        )}
+      </ListGroup>
+    </Container>
   );
-}
+};
 
 export default ReviewPage;

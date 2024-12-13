@@ -1,43 +1,71 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import 'bootstrap/dist/css/bootstrap.min.css';
+import React, { useEffect, useState } from 'react';
+import { Container, ListGroup, Alert } from 'react-bootstrap';
 
-function ReservationPage() {
-  const navigate = useNavigate();
+const ReservationPage = () => {
+  const [reservations, setReservations] = useState([]);
+  const [status, setStatus] = useState('');
+  const mockApiUrl = 'https://675bf7eb9ce247eb19380b43.mockapi.io/Hospital';
 
-  const reservations = [
-    { id: 1, name: "John Doe", date: "2024-12-10", time: "10:00 AM", doctor: "Dr. Smith" },
-    { id: 2, name: "Jane Smith", date: "2024-12-12", time: "2:00 PM", doctor: "Dr. Johnson" },
-    { id: 3, name: "Alex Johnson", date: "2024-12-15", time: "11:00 AM", doctor: "Dr. Lee" },
-  ];
+  useEffect(() => {
+    const fetchReservations = async () => {
+      try {
+        setStatus('Fetching reservations...');
+        const response = await fetch(mockApiUrl);
+        if (!response.ok) {
+          console.error('HTTP error:', response.status, response.statusText);
+          throw new Error('Failed to fetch reservations.');
+        }
+        const data = await response.json();
 
-  const handleMakeReservation = () => {
-    navigate('/make-reservation');
-  };
+        // 예약 데이터 처리
+        const allReservations = data.flatMap(hospital =>
+          hospital.reservation && hospital.reservation.length > 0
+            ? hospital.reservation.map(res => ({
+                ...res,
+                hospitalName: hospital.name, // 병원 이름 추가
+              }))
+            : []
+        );
+
+        setReservations(allReservations);
+        setStatus('');
+      } catch (error) {
+        console.error('Error fetching reservations:', error);
+        setStatus('Error fetching reservations.');
+      }
+    };
+
+    fetchReservations();
+  }, []);
 
   return (
-    <div className="container mt-5">
-      <h1 className="mb-4 text-center">Your Reservations</h1>
-
-      <div className="list-group">
-        {reservations.map((reservation) => (
-          <div key={reservation.id} className="list-group-item">
-            <h5 className="mb-1">{reservation.name}</h5>
-            <p className="mb-1">
-              Date: {reservation.date} | Time: {reservation.time}
-            </p>
-            <small>Doctor: {reservation.doctor}</small>
-          </div>
-        ))}
-      </div>
-
-      <div className="text-center mt-4">
-        <button className="btn btn-primary btn-lg" onClick={handleMakeReservation}>
-          Make a Reservation
-        </button>
-      </div>
-    </div>
+    <Container className="mt-5">
+      <h1 className="mb-4 text-center">Reservations</h1>
+      {status && <Alert variant="info">{status}</Alert>}
+      {reservations.length > 0 ? (
+        <ListGroup>
+          {reservations.map((reservation, index) => (
+            <ListGroup.Item key={index}>
+              <p>
+                <strong>Name:</strong> {reservation.name}
+              </p>
+              <p>
+                <strong>Date:</strong> {reservation.date}
+              </p>
+              <p>
+                <strong>Time:</strong> {reservation.time}
+              </p>
+              <p>
+                <strong>Hospital:</strong> {reservation.hospitalName}
+              </p>
+            </ListGroup.Item>
+          ))}
+        </ListGroup>
+      ) : (
+        <Alert variant="warning">No reservations available.</Alert>
+      )}
+    </Container>
   );
-}
+};
 
 export default ReservationPage;
