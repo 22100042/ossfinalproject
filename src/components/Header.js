@@ -27,21 +27,15 @@ function Header() {
     color: '#333',
   };
 
-  const linkHoverStyle = {
-    textDecoration: 'underline',
-  };
-
   return (
     <header style={headerStyle}>
       <div>
+        {/* Pohang Hospital Explorer 텍스트를 Home 링크로 설정 */}
         <Link to="/" style={logoStyle}>
           Pohang Hospital Explorer
         </Link>
       </div>
       <nav style={navStyle}>
-        <Link to="/" style={linkStyle}>
-          Home
-        </Link>
         <Link to="/search" style={linkStyle}>
           Search Hospitals
         </Link>
