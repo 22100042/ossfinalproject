@@ -6,10 +6,13 @@ import SearchPage from './pages/SearchPage';
 import DetailPage from './pages/DetailPage';
 import ReviewPage from './pages/ReviewPage';
 import ReservationPage from './pages/ReservationPage';
+import TransferData from './components/TransferData.js'; // TransferData 컴포넌트 추가
 
 function App() {
   return (
     <Router>
+      {/* TransferData를 앱 로드 시 한 번 실행되도록 배치 */}
+      <TransferData />
       <Header />
       <Routes>
         <Route path="/" element={<Home />} />

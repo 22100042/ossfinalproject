@@ -4,34 +4,50 @@ import { useParams } from 'react-router-dom';
 const DetailPage = () => {
   const { id } = useParams();
   const [hospital, setHospital] = useState(null);
+  const [loading, setLoading] = useState(true);
+
+  const mockApiUrl = `https://675bf7eb9ce247eb19380b43.mockapi.io/Hospital/${id}`;
 
   useEffect(() => {
-    // TODO: Replace with API call to fetch hospital details by ID
-    setHospital({
-      id: 1,
-      name: 'Pohang General Hospital',
-      address: 'Pohang, South Korea',
-      phone: '010-1234-5678',
-      department: 'Cardiology',
-      rating: 4.5,
-      reviews: [
-        { content: 'Great service!', rating: 5 },
-        { content: 'Clean and friendly.', rating: 4 },
-      ],
-    });
+    const fetchHospitalDetails = async () => {
+      try {
+        const response = await fetch(mockApiUrl);
+        if (!response.ok) {
+          throw new Error('Failed to fetch hospital details.');
+        }
+
+        const data = await response.json();
+
+        // Ensure rating is a number and provide a default if undefined
+        setHospital({
+          ...data,
+          rating: Number(data.rating) || 0, // Convert rating to a number or default to 0
+        });
+      } catch (error) {
+        console.error(error);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchHospitalDetails();
   }, [id]);
 
-  if (!hospital) {
+  if (loading) {
     return <p>Loading...</p>;
+  }
+
+  if (!hospital) {
+    return <p>Hospital not found.</p>;
   }
 
   return (
     <div>
       <h1>{hospital.name}</h1>
-      <p>{hospital.address}</p>
-      <p>{hospital.phone}</p>
+      <p>Address: {hospital.address}</p>
+      <p>Phone: {hospital.phone}</p>
       <p>Department: {hospital.department}</p>
-      <p>Rating: {hospital.rating}</p>
+      <p>Rating: {hospital.rating.toFixed(1)}</p> {/* Safely use toFixed */}
       <div>
         <h2>Reviews</h2>
         {hospital.reviews.map((review, index) => (
