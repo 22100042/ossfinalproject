@@ -9,17 +9,15 @@ const TransferData = () => {
   useEffect(() => {
     const transferData = async () => {
       try {
-        // MockAPI 데이터 확인
         setStatus('Checking MockAPI...');
         const mockResponse = await fetch(mockApiUrl);
         const mockData = await mockResponse.json();
 
         if (mockData.length > 0) {
           setStatus('Data already exists in MockAPI. Skipping transfer.');
-          return; // MockAPI에 데이터가 있으면 전송 중단
+          return;
         }
 
-        // MockAPI에 데이터가 없으면 Open API에서 데이터 가져오기
         setStatus('Fetching data from public API...');
         const publicResponse = await fetch(publicApiUrl);
         const publicData = await publicResponse.json();
@@ -29,16 +27,19 @@ const TransferData = () => {
           return;
         }
 
-        const hospitalData = publicData.data.map((hospital) => ({
+        const hospitalData = publicData.data.map((hospital, index) => ({
+          id: index + 1, // 고유 ID를 수동으로 추가
           name: hospital['의료기관명'],
           address: hospital['의료기관주소(도로명)'],
           phone: hospital['의료기관전화번호'],
           department: hospital['전문의'] ? 'General Medicine' : 'Other',
           rating: Math.random() * 5, // 임의의 평점
           reviews: [],
+          reservation: [],
         }));
 
-        // Open API 데이터를 MockAPI로 전송
+        hospitalData.sort((a, b) => a.id - b.id); // ID 기준으로 정렬
+
         setStatus('Uploading data to MockAPI...');
         const uploadPromises = hospitalData.map((hospital) =>
           fetch(mockApiUrl, {
@@ -58,8 +59,8 @@ const TransferData = () => {
       }
     };
 
-    transferData(); // 컴포넌트가 로드되자마자 실행
-  }, []); // 빈 배열로 한 번만 실행
+    transferData();
+  }, []);
 
  
 };

@@ -7,12 +7,9 @@ import DetailPage from './pages/DetailPage';
 import ReviewPage from './pages/ReviewPage';
 import WriteReviewPage from './pages/WriteReviewPage';
 import ReservationPage from './pages/ReservationPage';
-<<<<<<< HEAD
 import TransferData from './components/TransferData.js'; // TransferData 컴포넌트 추가
-=======
 import MakeReservationPage from './pages/MakeReservationPage';
 import 'bootstrap/dist/css/bootstrap.min.css';
->>>>>>> 7fbc123330835419ebdfc79a7ec07258c0af619f
 
 function App() {
   return (

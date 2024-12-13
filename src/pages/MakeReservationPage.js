@@ -5,11 +5,10 @@ function MakeReservationPage() {
   const [name, setName] = useState('');
   const [date, setDate] = useState('');
   const [time, setTime] = useState('');
-  const [doctor, setDoctor] = useState('');
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ name, date, time, doctor }); // Here you would send this data to the server.
+    console.log({ name, date, time }); // 서버에 이 데이터를 보낼 수 있습니다.
     alert('Reservation submitted successfully!');
   };
 
@@ -52,22 +51,6 @@ function MakeReservationPage() {
             onChange={(e) => setTime(e.target.value)}
             required
           />
-        </div>
-
-        <div className="mb-3">
-          <label htmlFor="doctor" className="form-label">Doctor</label>
-          <select
-            className="form-select"
-            id="doctor"
-            value={doctor}
-            onChange={(e) => setDoctor(e.target.value)}
-            required
-          >
-            <option value="">Choose...</option>
-            <option value="Dr. Smith">Dr. Smith</option>
-            <option value="Dr. Johnson">Dr. Johnson</option>
-            <option value="Dr. Lee">Dr. Lee</option>
-          </select>
         </div>
 
         <button type="submit" className="btn btn-primary">Submit Reservation</button>
