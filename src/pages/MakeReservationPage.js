@@ -8,7 +8,7 @@ function MakeReservationPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ name, date, time }); // 서버에 이 데이터를 보낼 수 있습니다.
+    console.log({ name, date, time }); 
     alert('Reservation submitted successfully!');
   };
 

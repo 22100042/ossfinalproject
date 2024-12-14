@@ -27,7 +27,7 @@ function Home() {
       <div className="text-center">
         <h1 className="display-3 mb-4">Welcome to Pohang Hospital Explorer</h1>
         <p className="lead mb-4">Find the best hospitals in Pohang for your needs.</p>
-        {/* 검색창 영역 */}
+        
         <form onSubmit={handleSearch} className="d-flex justify-content-center">
           <div className="input-group" style={{ maxWidth: '800px', width: '100%' }}>
             <input

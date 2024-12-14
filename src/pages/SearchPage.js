@@ -8,6 +8,13 @@ const SearchPage = () => {
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState(null);
 
+  
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const total = reviews.reduce((sum, review) => sum + Number(review.rating), 0);
+    return total / reviews.length;
+  };
+
   const handleSearch = async () => {
     setLoading(true);
     setError(null);
@@ -22,25 +29,28 @@ const SearchPage = () => {
 
       const data = await response.json();
 
-      // 필터링 로직
-      const filteredHospitals = data.filter((hospital) => {
+     
+      const updatedHospitals = data.map((hospital) => ({
+        ...hospital,
+        rating: calculateAverageRating(hospital.reviews), 
+      }));
+
+      const filteredHospitals = updatedHospitals.filter((hospital) => {
         const normalizedQuery = query.trim().toLowerCase();
 
-        // 빈칸이면 전체 데이터 반환
         if (!normalizedQuery && !department) {
-          return true; // 필터링 없이 전체 반환
+          return true; 
         }
 
-        // 검색 조건
         const nameMatch = normalizedQuery
           ? hospital.name.toLowerCase().includes(normalizedQuery)
-          : true; // 검색어가 없으면 조건 무효화
+          : true;
         const addressMatch = normalizedQuery
           ? hospital.address.toLowerCase().includes(normalizedQuery)
-          : true; // 검색어가 없으면 조건 무효화
+          : true;
         const departmentMatch = department
           ? hospital.department.toLowerCase() === department.toLowerCase()
-          : true; // 진료과가 선택되지 않으면 조건 무효화
+          : true;
 
         return (nameMatch || addressMatch) && departmentMatch;
       });
@@ -97,7 +107,7 @@ const SearchPage = () => {
                 <Card.Title>{hospital.name}</Card.Title>
                 <Card.Text>{hospital.address}</Card.Text>
                 <Card.Text>Department: {hospital.department}</Card.Text>
-                <Card.Text>Rating: {hospital.rating.toFixed(1)}</Card.Text>
+                <Card.Text>Rating: {hospital.rating?.toFixed(1) || 'No Ratings Yet'}</Card.Text>
                 <Button variant="secondary" href={`/detail/${hospital.id}`}>
                   View Details
                 </Button>

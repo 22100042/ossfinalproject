@@ -14,7 +14,14 @@ const DetailPage = () => {
 
   const mockApiUrl = `https://675bf7eb9ce247eb19380b43.mockapi.io/Hospital/${id}`;
 
-  // Fetch hospital details
+ 
+  const calculateAverageRating = (reviews) => {
+    if (!reviews || reviews.length === 0) return 0;
+    const total = reviews.reduce((sum, review) => sum + Number(review.rating), 0);
+    return total / reviews.length;
+  };
+
+  
   useEffect(() => {
     const fetchHospitalDetails = async () => {
       try {
@@ -23,6 +30,7 @@ const DetailPage = () => {
           throw new Error('Failed to fetch hospital details.');
         }
         const data = await response.json();
+        data.rating = calculateAverageRating(data.reviews); 
         setHospital(data);
       } catch (error) {
         console.error(error);
@@ -35,7 +43,7 @@ const DetailPage = () => {
     fetchHospitalDetails();
   }, [id]);
 
-  // Common function to update hospital data
+  
   const updateHospitalData = async (updatedData) => {
     try {
       const response = await fetch(mockApiUrl, {
@@ -49,6 +57,7 @@ const DetailPage = () => {
       }
 
       const data = await response.json();
+      data.rating = calculateAverageRating(data.reviews); 
       setHospital(data);
       setStatus('Operation completed successfully!');
     } catch (error) {
@@ -57,27 +66,22 @@ const DetailPage = () => {
     }
   };
 
-  // Add, edit, or delete items
-  const handleAddOrEdit = async (type) => {
+  const handleAddOrEdit = async () => {
     const updatedHospital = { ...hospital };
     if (modalType === 'reservation') {
-      if (editingItem) {
-        // Edit reservation
+      if (editingItem !== null) {
         updatedHospital.reservation = hospital.reservation.map((res, index) =>
           index === editingItem ? reservationData : res
         );
       } else {
-        // Add reservation
         updatedHospital.reservation = [...hospital.reservation, reservationData];
       }
     } else if (modalType === 'review') {
-      if (editingItem) {
-        // Edit review
+      if (editingItem !== null) {
         updatedHospital.reviews = hospital.reviews.map((rev, index) =>
           index === editingItem ? reviewData : rev
         );
       } else {
-        // Add review
         updatedHospital.reviews = [...hospital.reviews, reviewData];
       }
     }
@@ -161,7 +165,7 @@ const DetailPage = () => {
       <Button variant="primary" onClick={() => setModalType('reservation')}>Add Reservation</Button>
       <Button variant="success" className="ms-2" onClick={() => setModalType('review')}>Add Review</Button>
 
-      {/* Modal for adding/editing */}
+      {}
       <Modal show={modalType} onHide={resetForm}>
         <Modal.Header closeButton>
           <Modal.Title>{editingItem !== null ? 'Edit' : 'Add'} {modalType === 'reservation' ? 'Reservation' : 'Review'}</Modal.Title>

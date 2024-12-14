@@ -14,7 +14,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 function App() {
   return (
     <Router>
-      {/* TransferData를 앱 로드 시 한 번 실행되도록 배치 */}
+      
       <TransferData />
       <Header />
       <Routes>

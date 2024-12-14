@@ -17,12 +17,12 @@ const ReservationPage = () => {
         }
         const data = await response.json();
 
-        // 예약 데이터 처리
+     
         const allReservations = data.flatMap(hospital =>
           hospital.reservation && hospital.reservation.length > 0
             ? hospital.reservation.map(res => ({
                 ...res,
-                hospitalName: hospital.name, // 병원 이름 추가
+                hospitalName: hospital.name,
               }))
             : []
         );

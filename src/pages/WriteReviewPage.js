@@ -8,7 +8,7 @@ function WriteReviewPage() {
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    console.log({ author, content, rating }); // Here you would send this data to the server.
+    console.log({ author, content, rating }); 
     alert('Review submitted successfully!');
   };
 

@@ -30,7 +30,7 @@ function Header() {
   return (
     <header style={headerStyle}>
       <div>
-        {/* Pohang Hospital Explorer 텍스트를 Home 링크로 설정 */}
+        {}
         <Link to="/" style={logoStyle}>
           Pohang Hospital Explorer
         </Link>

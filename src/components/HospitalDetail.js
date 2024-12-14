@@ -20,7 +20,6 @@ function HospitalDetail() {
   };
 
   useEffect(() => {
-    // API 호출로 병원 데이터 가져오기
     fetch(`/api/hospitals/${id}`)
       .then((response) => response.json())
       .then((data) => setHospital(data));
