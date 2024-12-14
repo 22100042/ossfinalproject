@@ -41,7 +41,7 @@ const DetailPage = () => {
     };
 
     fetchHospitalDetails();
-  }, [id]);
+  }, [mockApiUrl]);
 
   
   const updateHospitalData = async (updatedData) => {

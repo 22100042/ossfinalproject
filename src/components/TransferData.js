@@ -1,7 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import  { useEffect, useState } from 'react';
 
 const TransferData = () => {
-  const [status, setStatus] = useState(''); 
+  const [, setStatus] = useState(''); 
   const publicApiUrl =
     'https://api.odcloud.kr/api/15113093/v1/uddi:2d3644d5-c88f-4240-83f7-eb12cf6772f7?page=1&perPage=47&serviceKey=Abx7rHO5J4uvKphplereXLu7nQaJmD7nVXrORrU7hNRH%2B8Wbdw4EaQs4Fy5c2%2Bb08%2BAgjYeX9Un9TJ%2Bco%2F94uQ%3D%3D';
   const mockApiUrl = 'https://675bf7eb9ce247eb19380b43.mockapi.io/Hospital';
