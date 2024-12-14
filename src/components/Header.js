@@ -40,7 +40,7 @@ function Header() {
           Search Hospitals
         </Link>
         <Link to="/reviews" style={linkStyle}>
-          Submit Review
+          Reviews
         </Link>
         <Link to="/reservations" style={linkStyle}>
           Reservations
